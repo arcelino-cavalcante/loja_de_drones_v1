@@ -30,7 +30,7 @@
     .cart-item { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
     .cart-item span { flex-grow:1; }
     .qty-controls { display:flex; align-items:center; gap:6px; }
-    .qty-btn { background:#a8df65; color:#2f2f2f; border:none; width:26px; height:26px; border-radius:4px; cursor:pointer; }
+    .qty-btn { background:#a8df65; color:#2f2f2f; border:none; width:26px; height:26px; border-radius:4px; cursor:pointer; margin-right: 16px;}
     .qty-btn:hover { background:#8fcf4a; }
     .remove-btn { background:#e74c3c; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; }
     .remove-btn:hover { background:#c0392b; }
@@ -43,6 +43,8 @@
     .modal-box { background:#fff; padding:30px; border-radius:10px; max-width:480px; width:90%; text-align:center; animation:zoom .35s forwards; color:#333; }
     @keyframes zoom { from { transform:scale(.5); opacity:0; } to { transform:scale(1); opacity:1;} }
     .modal-box img { width:100%; height:auto; margin-bottom:10px; opacity:1; transition:opacity .5s ease-in-out; }
+    .info-list { text-align:left; margin:10px 0; padding-left:20px; }
+    .info-list li { margin-bottom:6px; font-size:.9em; color:#555; }
     .action-btn { margin-top:20px; background:#a8df65; color:#2f2f2f; border:none; padding:10px 20px; border-radius:6px; cursor:pointer; transition:background .3s; }
     .action-btn:hover { background:#8fcf4a; }
     .qty-control { display:flex; align-items:center; justify-content:center; gap:18px; margin:18px 0; }
@@ -50,134 +52,304 @@
   </style>
 </head>
 <body>
-<header>
-  <h1>Loja de Drones</h1>
-  <img src="https://cdn-icons-png.flaticon.com/512/34/34568.png" alt="Carrinho"
-       onclick="document.getElementById('cart').scrollIntoView({behavior:'smooth'})"/>
-  <div id="cart-count">0</div>
-</header>
-<main id="product-list"></main>
-<section id="cart">
-  <h2>Seu Carrinho</h2>
-  <ul id="cart-items"><li>Nenhum produto adicionado.</li></ul>
-  <div id="cart-total"></div>
-  <button id="checkout-btn">Finalizar Compra</button>
-</section>
-<div id="modal"><div id="modal-content" class="modal-box"></div></div>
-<div id="modal-quantidade"><div id="modal-quantidade-content" class="modal-box"></div></div>
-<div id="popup">Produto adicionado ao carrinho!</div>
-<footer style="text-align:center;padding:20px;color:#666;font-size:.9em;">
-  &copy; 2025 Loja de Drones
-</footer>
-<script>
-  const produtos=[
-    {nome:"Drone Explorer",descricao:"Vôo estável com câmera 4K.",preco:1299,imagens:["imagens/drone1-1.jpg","imagens/drone1-2.jpg","imagens/drone1-3.jpg"]},
-    {nome:"Pro Flyer X",descricao:"Alcance de 5km e sensor de obstáculos.",preco:1599,imagens:["imagens/drone2-1.jpg","imagens/drone2-2.jpg","imagens/drone2-3.jpg"]},
-    {nome:"Mini Sky",descricao:"Compacto e portátil, ótimo para iniciantes.",preco:499,imagens:["imagens/drone3-1.jpg","imagens/drone3-2.jpg","imagens/drone3-3.jpg"]},
-    {nome:"Racing Drone",descricao:"Alta velocidade e frame leve.",preco:799,imagens:["imagens/drone4-1.jpg","imagens/drone4-2.jpg","imagens/drone4-3.jpg"]},
-    {nome:"Foldable Pro",descricao:"Dobragem fácil, transporte prático.",preco:1399,imagens:["imagens/drone5-1.jpg","imagens/drone5-2.jpg","imagens/drone5-3.jpg"]},
-    {nome:"CineDrone 8K",descricao:"Filmagens cinematográficas em 8K.",preco:2999,imagens:["imagens/drone6-1.jpg","imagens/drone6-2.jpg","imagens/drone6-3.jpg"]},
-    {nome:"Agricultural",descricao:"Pulverização precisa para plantações.",preco:1899,imagens:["imagens/drone7-1.jpg","imagens/drone7-2.jpg","imagens/drone7-3.jpg"]},
-    {nome:"Inspection",descricao:"Inspeção industrial com zoom 30x.",preco:2199,imagens:["imagens/drone8-1.jpg","imagens/drone8-2.jpg","imagens/drone8-3.jpg"]}
+  <header>
+    <h1>Loja de Drones</h1>
+    <img src="https://cdn-icons-png.flaticon.com/512/34/34568.png" alt="Carrinho"
+         onclick="document.getElementById('cart').scrollIntoView({behavior:'smooth'})"/>
+    <div id="cart-count">0</div>
+  </header>
+
+  <main id="product-list"></main>
+
+  <section id="cart">
+    <h2>Seu Carrinho</h2>
+    <ul id="cart-items"><li>Nenhum produto adicionado.</li></ul>
+    <div id="cart-total"></div>
+    <button id="checkout-btn">Finalizar Compra</button>
+  </section>
+
+  <div id="modal"><div id="modal-content" class="modal-box"></div></div>
+  <div id="modal-quantidade"><div id="modal-quantidade-content" class="modal-box"></div></div>
+  <div id="popup">Produto adicionado ao carrinho!</div>
+
+  <footer style="text-align:center;padding:20px;color:#666;font-size:.9em;">
+    &copy; 2025 Loja de Drones
+  </footer>
+
+  <script>
+      const produtos = [
+    {
+      nome: "Drone Explorer",
+      descricao: "Vôo estável com câmera 4K.",
+      informacoes: [
+        "Câmera: 4K",
+        "Tempo de voo: 30 min",
+        "Alcance: 2 km"
+      ],
+      preco: 1299,
+      imagens: [
+        "imagens/drone1-1.jpg",
+        "imagens/drone1-2.jpg",
+        "imagens/drone1-3.jpg"
+      ]
+    },
+    {
+      nome: "Pro Flyer X",
+      descricao: "Alcance de 5km e sensor de obstáculos.",
+      informacoes: [
+        "Sensor de obstáculos",
+        "Alcance: 5 km",
+        "Bateria removível"
+      ],
+      preco: 1599,
+      imagens: [
+        "imagens/drone2-1.jpg",
+        "imagens/drone2-2.jpg",
+        "imagens/drone2-3.jpg"
+      ]
+    },
+    {
+      nome: "Mini Sky",
+      descricao: "Compacto e portátil, ótimo para iniciantes.",
+      informacoes: [
+        "Compacto e portátil",
+        "Fácil de transportar",
+        "Ideal para iniciantes"
+      ],
+      preco: 499,
+      imagens: [
+        "imagens/drone3-1.jpg",
+        "imagens/drone3-2.jpg",
+        "imagens/drone3-3.jpg"
+      ]
+    },
+    {
+      nome: "Racing Drone",
+      descricao: "Alta velocidade e frame leve.",
+      informacoes: [
+        "Velocidade máxima: 80 km/h",
+        "Frame de fibra de carbono",
+        "Resposta de controle ultra-rápida"
+      ],
+      preco: 799,
+      imagens: [
+        "imagens/drone4-1.jpg",
+        "imagens/drone4-2.jpg",
+        "imagens/drone4-3.jpg"
+      ]
+    },
+    {
+      nome: "Foldable Pro",
+      descricao: "Dobragem fácil, transporte prático.",
+      informacoes: [
+        "Design dobrável",
+        "Leve e resistente",
+        "Transporte fácil em mochila"
+      ],
+      preco: 1399,
+      imagens: [
+        "imagens/drone5-1.jpg",
+        "imagens/drone5-2.jpg",
+        "imagens/drone5-3.jpg"
+      ]
+    },
+    {
+      nome: "CineDrone 8K",
+      descricao: "Filmagens cinematográficas em 8K.",
+      informacoes: [
+        "Gravação em 8K",
+        "Estabilização de 3 eixos",
+        "Foco automático avançado"
+      ],
+      preco: 2999,
+      imagens: [
+        "imagens/drone6-1.jpg",
+        "imagens/drone6-2.jpg",
+        "imagens/drone6-3.jpg"
+      ]
+    },
+    {
+      nome: "Agricultural",
+      descricao: "Pulverização precisa para plantações.",
+      informacoes: [
+        "Sistema de pulverização integrado",
+        "Tanque de 10L",
+        "Autonomia de voo: 25 min"
+      ],
+      preco: 1899,
+      imagens: [
+        "imagens/drone7-1.jpg",
+        "imagens/drone7-2.jpg",
+        "imagens/drone7-3.jpg"
+      ]
+    },
+    {
+      nome: "Inspection",
+      descricao: "Inspeção industrial com zoom 30x.",
+      informacoes: [
+        "Zoom óptico 30x",
+        "Visão noturna",
+        "Transmissão de vídeo em tempo real"
+      ],
+      preco: 2199,
+      imagens: [
+        "imagens/drone8-1.jpg",
+        "imagens/drone8-2.jpg",
+        "imagens/drone8-3.jpg"
+      ]
+    }
   ];
-  const lista=document.getElementById('product-list');
-  const cartItemsEl=document.getElementById('cart-items');
-  const cartTotalEl=document.getElementById('cart-total');
-  const cartCountEl=document.getElementById('cart-count');
-  const popup=document.getElementById('popup');
-  const modal=document.getElementById('modal');
-  const modalContent=document.getElementById('modal-content');
-  const modalQ=document.getElementById('modal-quantidade');
-  const modalQContent=document.getElementById('modal-quantidade-content');
-  let carrinho=[],currentIdx=null,currentQty=1;
 
-  // Monta grid de produtos
-  produtos.forEach((p,i)=>{
-    const card=document.createElement('div'); card.className='product';
-    const img=document.createElement('img'); img.src=p.imagens[0]; let k=0;
-    setInterval(()=>{
-      img.style.opacity=0;
-      setTimeout(()=>{
-        k=(k+1)%p.imagens.length;
-        img.src=p.imagens[k];
-        img.style.opacity=1;
-      },250);
-    },2000);
-    const info=document.createElement('div'); info.className='product-info';
-    info.innerHTML=`<h2>${p.nome}</h2><p>${p.descricao}</p><div class='price'>R$ ${p.preco.toFixed(2)}</div>`;
-    const btn=document.createElement('button'); btn.textContent='Adicionar ao Carrinho';
-    btn.onclick=e=>{e.stopPropagation(); abrirModalQuantidade(i);};
-    info.appendChild(btn); card.appendChild(img); card.appendChild(info);
-    card.onclick=()=>abrirModal(i); lista.appendChild(card);
-  });
 
-  // Modal detalhes
-  function abrirModal(i){
-    const p=produtos[i];
-    modalContent.innerHTML=`<div id='galeria'></div><h2>${p.nome}</h2><p>${p.descricao}</p><div class='price'>R$ ${p.preco.toFixed(2)}</div><button class='action-btn' onclick='abrirModalQuantidade(${i})'>Adicionar ao Carrinho</button><br><button class='action-btn' onclick='modal.style.display=\"none\"'>Fechar</button>`;
-    const gal=document.getElementById('galeria'); gal.innerHTML=''; let j=0;
-    const gimg=document.createElement('img'); gimg.src=p.imagens[0]; gimg.style.opacity=1; gimg.style.transition='opacity .5s ease-in-out'; gal.appendChild(gimg);
-    const it=setInterval(()=>{
-      gimg.style.opacity=0;
-      setTimeout(()=>{
-        j=(j+1)%p.imagens.length;
-        gimg.src=p.imagens[j];
-        gimg.style.opacity=1;
-      },250);
-    },2000);
-    modal.style.display='flex';
-    modal.onclick=e=>{ if(e.target===modal){ modal.style.display='none'; clearInterval(it); } };
-  }
+    const lista = document.getElementById('product-list');
+    const cartItemsEl = document.getElementById('cart-items');
+    const cartTotalEl = document.getElementById('cart-total');
+    const cartCountEl = document.getElementById('cart-count');
+    const popup = document.getElementById('popup');
+    const modal = document.getElementById('modal');
+    const modalContent = document.getElementById('modal-content');
+    const modalQ = document.getElementById('modal-quantidade');
+    const modalQContent = document.getElementById('modal-quantidade-content');
+    let carrinho = [], currentIdx = null, currentQty = 1;
 
-  // Modal quantidade
-  function abrirModalQuantidade(i){
-    modal.style.display='none';
-    currentIdx=i; currentQty=1;
-    const p=produtos[i];
-    modalQContent.innerHTML=`<h2>${p.nome}</h2><p>Quantidade:</p><div class='qty-control'><button class='qty-btn' onclick='changeQty(-1)'>&minus;</button><span id='qty-value' class='qty-value'>1</span><button class='qty-btn' onclick='changeQty(1)'>&#43;</button></div><button class='action-btn' onclick='confirmarCarrinho()'>Confirmar</button><br><button class='action-btn' onclick='modalQ.style.display=\"none\"'>Cancelar</button>`;
-    modalQ.style.display='flex';
-  }
-  function changeQty(d){
-    currentQty=Math.max(1,currentQty+d);
-    document.getElementById('qty-value').textContent=currentQty;
-  }
+    // Monta os cards
+    produtos.forEach((p,i) => {
+      const card = document.createElement('div'); card.className = 'product';
+      const img = document.createElement('img'); img.src = p.imagens[0];
+      let k = 0;
+      setInterval(() => {
+        img.style.opacity = 0;
+        setTimeout(() => {
+          k = (k + 1) % p.imagens.length;
+          img.src = p.imagens[k];
+          img.style.opacity = 1;
+        }, 300);
+      }, 2500);
 
-  // Confirmar adição
-  function confirmarCarrinho(){
-    carrinho.push({...produtos[currentIdx], quantidade: currentQty});
-    modalQ.style.display='none';
-    popup.style.display='block';
-    setTimeout(()=>popup.style.display='none',2000);
-    atualizarCarrinho();
-  }
+      const info = document.createElement('div'); info.className = 'product-info';
+      info.innerHTML = `
+        <h2>${p.nome}</h2>
+        <p>${p.descricao}</p>
+        <div class="price">R$ ${p.preco.toFixed(2)}</div>
+      `;
+      const btn = document.createElement('button');
+      btn.textContent = 'Adicionar ao Carrinho';
+      btn.onclick = e => { e.stopPropagation(); abrirModalQuantidade(i); };
+      info.appendChild(btn);
 
-  // Atualizar carrinho
-  function atualizarCarrinho(){
-    cartItemsEl.innerHTML='';
-    let total=0, Qt=0;
-    carrinho.forEach((item,i)=>{
-      const li=document.createElement('li');
-      li.className='cart-item';
-      li.innerHTML=`<span>${item.quantidade}x ${item.nome} - R$ ${(item.preco*item.quantidade).toFixed(2)}</span><div class='qty-controls'><button class='qty-btn' onclick='updateItemQty(${i},-1)'>&minus;</button><button class='qty-btn' onclick='updateItemQty(${i},1)'>&#43;</button></div><button class='remove-btn' onclick='removerItem(${i})'>Remover</button>`;
-      cartItemsEl.appendChild(li);
-      total+=item.preco*item.quantidade;
-      Qt+=item.quantidade;
+      card.appendChild(img);
+      card.appendChild(info);
+      card.onclick = () => abrirModal(i);
+      lista.appendChild(card);
     });
-    if(carrinho.length===0) cartItemsEl.innerHTML='<li>Nenhum produto adicionado.</li>';
-    cartCountEl.textContent=Qt;
-    cartTotalEl.innerHTML=`<strong>Total: R$ ${total.toFixed(2)}</strong>`;
-  }
-  function removerItem(i){ carrinho.splice(i,1); atualizarCarrinho(); }
-  function updateItemQty(i,d){ carrinho[i].quantidade=Math.max(1,carrinho[i].quantidade+d); atualizarCarrinho(); }
 
-  // Checkout WhatsApp
-  document.getElementById('checkout-btn').addEventListener('click',()=>{
-    if(carrinho.length===0){ alert('Carrinho vazio!'); return; }
-    let msg='Olá! Pedido:\n', tot=0;
-    carrinho.forEach(m=>{ msg+=`${m.quantidade}x ${m.nome} - R$ ${(m.preco*m.quantidade).toFixed(2)}\n`; tot+=m.preco*m.quantidade; });
-    msg+=`\nTotal: R$ ${tot.toFixed(2)}`;
-    window.open(`https://wa.me/5587981473819?text=${encodeURIComponent(msg)}`,'_blank');
-  });
-</script>
+    // Modal de detalhes com "informacoes"
+    function abrirModal(i) {
+      const p = produtos[i];
+      modalContent.innerHTML = `
+        <div id="galeria"></div>
+        <h2>${p.nome}</h2>
+        <ul class="info-list">
+          ${p.informacoes.map(item => `<li>${item}</li>`).join('')}
+        </ul>
+        <div class="price">R$ ${p.preco.toFixed(2)}</div>
+        <button class="action-btn" onclick="abrirModalQuantidade(${i})">Adicionar ao Carrinho</button>
+        <br>
+        <button class="action-btn" onclick="fecharModal()">Fechar</button>
+      `;
+
+      const gal = document.getElementById('galeria');
+      gal.innerHTML = '';
+      let j = 0;
+      const gimg = document.createElement('img');
+      gimg.src = p.imagens[0];
+      gal.appendChild(gimg);
+
+      const it = setInterval(() => {
+        gimg.style.opacity = 0;
+        setTimeout(() => {
+          j = (j + 1) % p.imagens.length;
+          gimg.src = p.imagens[j];
+          gimg.style.opacity = 1;
+        }, 300);
+      }, 2500);
+
+      modal.style.display = 'flex';
+      modal.onclick = e => { if(e.target===modal) fecharModal(); };
+
+      function fecharModal() {
+        modal.style.display = 'none';
+        clearInterval(it);
+      }
+    }
+
+    // Modal de quantidade
+    function abrirModalQuantidade(i) {
+      modal.style.display = 'none';
+      currentIdx = i; currentQty = 1;
+      const p = produtos[i];
+      modalQContent.innerHTML = `
+        <h2>${p.nome}</h2>
+        <p>Quantidade:</p>
+        <div class="qty-control">
+          <button class="qty-btn" onclick="changeQty(-1)">&minus;</button>
+          <span id="qty-value" class="qty-value">1</span>
+          <button class="qty-btn" onclick="changeQty(1)">&#43;</button>
+        </div>
+        <button class="action-btn" onclick="confirmarCarrinho()">Confirmar</button>
+        <br>
+        <button class="action-btn" onclick="modalQ.style.display='none'">Cancelar</button>
+      `;
+      modalQ.style.display = 'flex';
+    }
+    function changeQty(d) {
+      currentQty = Math.max(1, currentQty + d);
+      document.getElementById('qty-value').textContent = currentQty;
+    }
+    function confirmarCarrinho() {
+      carrinho.push({ ...produtos[currentIdx], quantidade: currentQty });
+      modalQ.style.display = 'none';
+      popup.style.display = 'block';
+      setTimeout(() => popup.style.display = 'none', 2000);
+      atualizarCarrinho();
+    }
+
+    // Atualiza carrinho
+    function atualizarCarrinho() {
+      cartItemsEl.innerHTML = '';
+      let total = 0, Qt = 0;
+      carrinho.forEach((item,i) => {
+        const li = document.createElement('li'); li.className = 'cart-item';
+        li.innerHTML = `
+          <span>${item.quantidade}x ${item.nome} - R$ ${(item.preco*item.quantidade).toFixed(2)}</span>
+          <div class="qty-controls">
+            <button class="qty-btn" onclick="updateItemQty(${i},-1)">&minus;</button>
+            <button class="qty-btn" onclick="updateItemQty(${i},1)">&#43;</button>
+          </div>
+          <button class="remove-btn" onclick="removerItem(${i})">Remover</button>
+        `;
+        cartItemsEl.appendChild(li);
+        total += item.preco * item.quantidade;
+        Qt += item.quantidade;
+      });
+      if (!carrinho.length) cartItemsEl.innerHTML = '<li>Nenhum produto adicionado.</li>';
+      cartCountEl.textContent = Qt;
+      cartTotalEl.innerHTML = `<strong>Total: R$ ${total.toFixed(2)}</strong>`;
+    }
+    function removerItem(i) { carrinho.splice(i,1); atualizarCarrinho(); }
+    function updateItemQty(i,d) { carrinho[i].quantidade = Math.max(1, carrinho[i].quantidade + d); atualizarCarrinho(); }
+
+    // Checkout WhatsApp
+    document.getElementById('checkout-btn').addEventListener('click', () => {
+      if (!carrinho.length) { alert('Carrinho vazio!'); return; }
+      let msg = 'Olá! Pedido:%0A'; let tot = 0;
+      carrinho.forEach(m => {
+        msg += `${m.quantidade}x ${m.nome} - R$ ${(m.preco*m.quantidade).toFixed(2)}%0A`;
+        tot += m.preco * m.quantidade;
+      });
+      msg += `%0ATotal: R$ ${tot.toFixed(2)}`;
+      window.open(`https://wa.me/5587981473819?text=${msg}`, '_blank');
+    });
+  </script>
 </body>
 </html>
